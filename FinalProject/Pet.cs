@@ -16,14 +16,14 @@ public class Pet
 
     public bool IsAlive { get; private set; } = true;
 
-    public event Action<Pet> OnPetDied;
+    public event Action<Pet> OnPetDied = delegate { };
 
     private CancellationTokenSource tokenSource;
 
-    public Pet(string name, PetType type)
+    public Pet(PetType type, string name)
     {
-        Name = name;
         Type = type;
+        Name = name;
         tokenSource = new CancellationTokenSource();
         _ = DecreaseStatsAsync(tokenSource.Token);
     }

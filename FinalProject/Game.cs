@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using empty.Enums;
 
 namespace empty;
 
 public class Game
 {
-    private bool İsRunning = true;
-    private readonly PetManager petManager = new PetManager();
+    private bool _isRunning = true;
+    private readonly PetManager _petManager = new PetManager();
 
-    public async Task startAsync()
+    public async Task StartAsync()
     {
-        Console.Clear();
-        Console.WriteLine("Welcome to DGD 208 Final Project!");
-
-        while (İsRunning)
+        while (_isRunning)
         {
             ShowMainMenu();
             
@@ -23,10 +21,10 @@ public class Game
             switch (input)
             {
                 case "1":
-                    AdoptPet();
+                    await AdoptPetMenu();
                     break;
                 case "2":
-                    petManager.ShowAllPetStats();
+                    _petManager.ShowAllPetStats();
                     break;
                 case "3":
                     UseItem();
@@ -35,7 +33,7 @@ public class Game
                     ShowCreatorInfo();
                     break;
                 case "0":
-                    İsRunning = false;
+                    _isRunning = false;
                     Console.WriteLine("Exiting game...");
                     break;
                 default:
@@ -64,7 +62,7 @@ public class Game
         Console.WriteLine("Created by Enes Inan - 2299112756");
     }
     
-    private void AdoptPet()
+    private async Task AdoptPetMenu()
     {
         Console.WriteLine("Choose a pet type:");
         foreach (var type in Enum.GetValues(typeof(PetType)))
@@ -77,9 +75,16 @@ public class Game
             Enum.IsDefined(typeof(PetType), selectedType))
         {
             Console.Write("Enter a name for your pet: ");
-            string name = Console.ReadLine();
+            string? name = Console.ReadLine();
+            
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Pet name cannot be empty. Adoption cancelled.");
+                return;
+            }
 
-            petManager.AdoptPet((PetType)selectedType, name);
+            _petManager.AdoptPet((PetType)selectedType, name);
+            await Task.Delay(1000);
         }
         else
         {
