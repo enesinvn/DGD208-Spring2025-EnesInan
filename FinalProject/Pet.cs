@@ -10,15 +10,17 @@ public class Pet
     public string Name { get; }
     public PetType Type { get; }
 
-    public int Hunger { get; private set; } = 50;
-    public int Sleep { get; private set; } = 50;
-    public int Fun { get; private set; } = 50;
+    public int Hunger { get; set; } = 50;
+    public int Sleep { get; set; } = 50;
+    public int Fun { get; set; } = 50;
 
     public bool IsAlive { get; private set; } = true;
 
     public event Action<Pet> OnPetDied = delegate { };
 
     private CancellationTokenSource tokenSource;
+    
+    private bool isDead = false;
 
     public Pet(PetType type, string name)
     {
@@ -38,9 +40,11 @@ public class Pet
             Sleep--;
             Fun--;
 
-            if (Hunger <= 0 || Sleep <= 0 || Fun <= 0)
+            if (!isDead&(Hunger <= 0 || Sleep <= 0 || Fun <= 0))
             {
+                isDead = true;
                 IsAlive = false;
+                Console.WriteLine($"{Name} has died due to poor care");
                 OnPetDied?.Invoke(this);
                 break;
             }
@@ -70,5 +74,14 @@ public class Pet
     public void ShowStats()
     {
         Console.WriteLine($"[{Type}] {Name} | Hunger: {Hunger} | Sleep: {Sleep} | Fun: {Fun}");
+    }
+
+    public void UpdateStatsOverTime()
+    {
+        Hunger += 1;
+        Sleep += 1;
+        Fun = Math.Max(Fun - 1, 0);
+        
+        //Console.WriteLine($"{Name}'s stats updated -> Hunger: {Hunger}, Sleep: {Sleep}, Fun: {Fun}");
     }
 }

@@ -9,8 +9,22 @@ public class Game
     private bool _isRunning = true;
     private readonly PetManager _petManager = new PetManager();
 
+    
     public async Task StartAsync()
     {
+        _petManager.PetDied += (_, name) =>
+        {
+            Console.WriteLine($"💀 {name} has died...");
+        };
+        _ = Task.Run(async () =>
+        {
+            while (_isRunning)
+            {
+                _petManager.UpdateAllPetStats();
+                await Task.Delay(5000); // each 5 seconds update all stats
+            }
+        });
+        
         while (_isRunning)
         {
             ShowMainMenu();
@@ -94,7 +108,6 @@ public class Game
     
     private void UseItem()
     {
-        Console.WriteLine("UseItem functionality will be added later.");
-        // Bu kısım ileride geliştirilecek
+        _petManager.UseItemOnPet();
     }
 }

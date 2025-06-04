@@ -1,6 +1,8 @@
 ﻿namespace empty.Enums;
 
-public class ItemType
+public enum ItemType
 {
-    
+    Food,
+    Bed,
+    Toy
 }
