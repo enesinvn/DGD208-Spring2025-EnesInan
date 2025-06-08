@@ -8,7 +8,7 @@ namespace empty
         static async Task Main(string[] args)
         {
             Game game = new Game();
-            await game.StartAsync();
+            await game.StartAsync(); 
         }
     }
 }

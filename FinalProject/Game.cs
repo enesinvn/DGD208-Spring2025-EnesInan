@@ -14,14 +14,13 @@ public class Game
     {
         _petManager.PetDied += (_, name) =>
         {
-            Console.WriteLine($"💀 {name} has died...");
+            Console.WriteLine($" {name} has died...");
         };
         _ = Task.Run(async () =>
         {
             while (_isRunning)
             {
-                _petManager.UpdateAllPetStats();
-                await Task.Delay(5000); // each 5 seconds update all stats
+                await Task.Delay(5000);
             }
         });
         
@@ -110,4 +109,12 @@ public class Game
     {
         _petManager.UseItemOnPet();
     }
+    
+    private List<Item> items = new List<Item>
+    {
+        new Item(ItemType.Food, "Apple"),
+        new Item(ItemType.Bed, "Soft Bed"),
+        new Item(ItemType.Toy, "Chew Toy")
+    };
+    
 }

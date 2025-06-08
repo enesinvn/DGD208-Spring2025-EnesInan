@@ -13,7 +13,11 @@ public class PetManager
         Pet newPet = new(type, name);
         pets.Add(newPet);
         Console.WriteLine($"{name} the {type} was adopted!");
-        newPet.OnPetDied += (pet) => PetDied?.Invoke(this, pet.Name);
+        newPet.OnPetDied += (pet) =>
+        {
+            PetDied?.Invoke(this, pet.Name);
+            RemovePet(pet);
+        };
     }
 
     public void ShowAllPetStats()
@@ -33,7 +37,10 @@ public class PetManager
     {
         foreach (var pet in pets.ToList())
         {
-            pet.UpdateStatsOverTime();
+            if (pet.IsAlive)
+            {
+                pet.ShowStats();
+            }
         }
     }
     public void UseItemOnPet()
@@ -76,5 +83,16 @@ public class PetManager
         Item item = new(chosenType, chosenType.ToString());
 
         item.ApplyTo(selectedPet);
+    }
+    public void RemovePet(Pet pet)
+    {
+        if (pets.Contains(pet))
+        {
+            pets.Remove(pet);
+        }
+    }
+    private void HandlePetDeath(Pet pet)
+    {
+        RemovePet(pet);
     }
 }

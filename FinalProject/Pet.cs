@@ -27,27 +27,50 @@ public class Pet
         Type = type;
         Name = name;
         tokenSource = new CancellationTokenSource();
-        _ = DecreaseStatsAsync(tokenSource.Token);
+
+        _ = DecreaseHungerAsync(tokenSource.Token);
+        _ = DecreaseSleepAsync(tokenSource.Token);
+        _ = DecreaseFunAsync(tokenSource.Token);
     }
 
-    public async Task DecreaseStatsAsync(CancellationToken token)
+    private async Task DecreaseHungerAsync(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
-            await Task.Delay(3000); // Her 3 saniyede bir stat azalır
-
+            await Task.Delay(1000);
             Hunger--;
-            Sleep--;
-            Fun--;
+            CheckAlive();
+        }
+    }
 
-            if (!isDead&(Hunger <= 0 || Sleep <= 0 || Fun <= 0))
-            {
-                isDead = true;
-                IsAlive = false;
-                Console.WriteLine($"{Name} has died due to poor care");
-                OnPetDied?.Invoke(this);
-                break;
-            }
+    private async Task DecreaseSleepAsync(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested)
+        {
+            await Task.Delay(3000);
+            Sleep--;
+            CheckAlive();
+        }
+    }
+
+    private async Task DecreaseFunAsync(CancellationToken token)
+    {
+        while (!token.IsCancellationRequested)
+        {
+            await Task.Delay(2000);
+            Fun--;
+            CheckAlive();
+        }
+    }
+    
+    private void CheckAlive()
+    {
+        if (!isDead && (Hunger <= 0 || Sleep <= 0 || Fun <= 0))
+        {
+            IsAlive = false;
+            isDead = true;
+            Console.WriteLine($"{Name} has died due to poor care.");
+            OnPetDied?.Invoke(this);
         }
     }
     
@@ -74,14 +97,5 @@ public class Pet
     public void ShowStats()
     {
         Console.WriteLine($"[{Type}] {Name} | Hunger: {Hunger} | Sleep: {Sleep} | Fun: {Fun}");
-    }
-
-    public void UpdateStatsOverTime()
-    {
-        Hunger += 1;
-        Sleep += 1;
-        Fun = Math.Max(Fun - 1, 0);
-        
-        //Console.WriteLine($"{Name}'s stats updated -> Hunger: {Hunger}, Sleep: {Sleep}, Fun: {Fun}");
     }
 }
