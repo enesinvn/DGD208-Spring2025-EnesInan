@@ -2,8 +2,8 @@
 
 public enum PetType
 {
-    Cat = 0,
-    Dog = 1,
-    Bird = 2,
-    Monkey = 3
+    Cat = 1,
+    Dog = 2,
+    Bird = 3,
+    Monkey = 4
 }
